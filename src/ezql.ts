@@ -27,7 +27,13 @@ export class EZQL {
 
   get baseUrl() {
     // precedence: arg > env > default
-    return this.host || process.env.API_HOST || DEFAULT_HOST
+
+    if (typeof process === 'undefined') {
+      // non-node environemnt (e.g. the browser)
+      return this.host || DEFAULT_HOST
+    } else {
+      return this.host || process.env.API_HOST || DEFAULT_HOST
+    }
   }
 
   async prompt(phrase: string, type: Prompt): Promise<string> {
