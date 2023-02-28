@@ -56,6 +56,7 @@ var EZQL = /** @class */ (function () {
     }
     Object.defineProperty(EZQL.prototype, "baseUrl", {
         get: function () {
+            // precedence: arg > env > default
             return this.host || process.env.API_HOST || exports.DEFAULT_HOST;
         },
         enumerable: false,
@@ -66,12 +67,18 @@ var EZQL = /** @class */ (function () {
             var result;
             return __generator(this, function (_a) {
                 switch (_a.label) {
-                    case 0: return [4 /*yield*/, fetch("".concat(this.baseUrl, "/ezql"), {
-                            body: JSON.stringify({ phrase: phrase, type: type }),
-                            headers: {
-                                Authorization: "Bearer ".concat(this.token),
-                            },
-                        })];
+                    case 0:
+                        // console.debug(`prompt("${phrase}", ${type})`)
+                        if (!phrase || !type)
+                            throw new Error("EZQL.prompt requires a 'phrase' and 'type' parameter");
+                        if (!Object.values(Prompt).includes(type))
+                            throw new Error("EZQL.Prompt requires 'type' in [".concat(Object.values(Prompt), "]"));
+                        return [4 /*yield*/, fetch("".concat(this.baseUrl, "/ezql"), {
+                                body: JSON.stringify({ phrase: phrase, type: type }),
+                                headers: {
+                                    Authorization: "Bearer ".concat(this.token),
+                                },
+                            })];
                     case 1:
                         result = _a.sent();
                         if (result.status === 200)

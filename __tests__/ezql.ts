@@ -64,6 +64,20 @@ describe('register EZQL', () => {
     expect(ob.baseUrl).toEqual(DEFAULT_HOST)
   })
 
+  test('.prompt() rejects missing params', async () => {
+    // eslint-disable-next-line @typescript-eslint/ban-ts-comment
+    // @ts-ignore
+    expect(async () => await ob.prompt()).rejects.toThrowError()
+
+    // eslint-disable-next-line @typescript-eslint/ban-ts-comment
+    // @ts-ignore
+    expect(async () => await ob.prompt('with one parameter')).rejects.toThrowError()
+
+    // eslint-disable-next-line @typescript-eslint/ban-ts-comment
+    // @ts-ignore
+    expect(async () => await ob.prompt('with 2 parameters', 'but the second is invalid')).rejects.toThrowError()
+  })
+
   test('prompt.data yields data', async () => {
     expect.assertions(2)
 

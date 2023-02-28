@@ -32,6 +32,8 @@ export class EZQL {
 
   async prompt(phrase: string, type: Prompt): Promise<string> {
     // console.debug(`prompt("${phrase}", ${type})`)
+    if (!phrase || !type) throw new Error(`EZQL.prompt requires a 'phrase' and 'type' parameter`)
+    if (!Object.values(Prompt).includes(type)) throw new Error(`EZQL.Prompt requires 'type' in [${Object.values(Prompt)}]`)
 
     const result = await fetch(`${this.baseUrl}/ezql`, {
       body: JSON.stringify({ phrase, type }),
