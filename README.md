@@ -41,10 +41,10 @@ Use our hosted file or [save a local copy](https://ezql.ai/bundle.v1.js).
   const ez = new Outerbase.EZQL({ token })
   const phrase = 'What is the answer to life, the univerise and everything?'
 
-  ez.prompt(phrase, 'sql').then((sqlText) => console.log(sqlText))
+  ez.prompt(phrase, Outerbase.Prompt.sql).then((sqlText) => console.log(sqlText))
   /* "SELECT answer FROM ultimate_question;" */
 
-  ez.prompt(phrase, 'data').then((data) => console.log(data))
+  ez.prompt(phrase, Outerbase.Prompt.data).then((data) => console.log(data))
   /* "42" */
 </script>
 ```
