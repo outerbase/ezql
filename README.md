@@ -1,13 +1,13 @@
 # ezql
 
-## Usage (TypeScript)
-
 ```sh
 npm add ezql
 ```
 
+## Usage (TypeScript/ESM)
+
 ```ts
-import EZQL, { Prompt } from 'ezql' // const EZQL = require('ezql')
+import { Prompt, EZQL } from 'ezql'
 
 const token = 'arbitrary-placeholder-value'
 const ez = new EZQL({ token })
@@ -20,13 +20,23 @@ const response = await ez.prompt(phrase, Prompt.data)
 /* "42" */
 ```
 
-## Usage (Web)
+## Usage (Node.JS/CJS)
+
+```ts
+const { Prompt, EZQL } = require('ezql')
+
+// the remainder is identical to TypeScript usage (see above)
+```
+
+## Usage (Web/UMD)
 
 Use our hosted file or [save a local copy](https://ezql.ai/bundle.v1.js).
 
 ```html
 <script src="https://ezql.ai/bundle.v1.js" />
 <script>
+  // A global variable `Outerbase` is now exposed
+
   const token = 'arbitrary-placeholder-value'
   const ez = new Outerbase.EZQL({ token })
   const phrase = 'What is the answer to life, the univerise and everything?'
