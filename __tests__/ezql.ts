@@ -2,7 +2,7 @@
 import { config } from 'dotenv'
 config()
 
-import EZQL, { Prompt } from '../lib/ezql'
+import { EZQL, Prompt } from '../src/ezql'
 
 describe('register EZQL', () => {
   const token = 'arbitrary-value'
