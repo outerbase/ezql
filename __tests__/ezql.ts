@@ -2,7 +2,7 @@
 import { config } from 'dotenv'
 config()
 
-import { EZQL, Prompt } from '../src/ezql'
+import { DEFAULT_HOST, EZQL, Prompt } from '../src/ezql'
 
 describe('register EZQL', () => {
   const token = 'arbitrary-value'
@@ -33,14 +33,30 @@ describe('register EZQL', () => {
     expect(ob.token).toEqual(token)
   })
 
-  test('utilizes env API_HOST', async () => {
+  test('utilizes host parameter', async () => {
     expect.assertions(2)
+
+    const host = 'arbitrary-host'
+    ob = new EZQL({ token, host })
+
+    expect(ob.host).toEqual(host)
+    expect(ob.baseUrl).not.toEqual(DEFAULT_HOST)
+  })
+
+  test('utilizes env API_HOST', async () => {
+    expect.assertions(3)
 
     const differentHost = 'a different value'
     process.env.API_HOST = differentHost
 
     expect(differentHost).not.toEqual(host)
     expect(ob.baseUrl).toEqual(process.env.API_HOST)
+    expect(ob.baseUrl).not.toEqual(DEFAULT_HOST)
+  })
+
+  test('falls back to default host', () => {
+    expect.assertions(1)
+    expect(ob.baseUrl).toEqual(DEFAULT_HOST)
   })
 
   test('prompt.data yields data', async () => {

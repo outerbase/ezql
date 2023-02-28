@@ -9,8 +9,8 @@ npm add ezql
 ```ts
 import EZQL, { Prompt } from 'ezql' // const EZQL = require('ezql')
 
-const accessToken = 'arbitrary-placeholder-value'
-const ez = new EZQL(accessToken)
+const token = 'arbitrary-placeholder-value'
+const ez = new EZQL({ token })
 const phrase = 'What is the answer to life, the univerise and everything?'
 
 const response = await ez.prompt(phrase, Prompt.sql)
