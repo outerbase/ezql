@@ -2,13 +2,13 @@
 import { config } from 'dotenv'
 config()
 
-import Outerbase, { Prompt } from '../lib/outerbase'
+import EZQL, { Prompt } from '../lib/ezql'
 
 describe('register EZQL', () => {
   const token = 'arbitrary-value'
   const host = process.env.API_HOST
 
-  let ob: Outerbase
+  let ob: EZQL
   let ogFetch: typeof global.fetch
   let fetch: jest.Mock // TODO add proper generic type
 
@@ -19,8 +19,8 @@ describe('register EZQL', () => {
     // then replace it with a mock
     fetch = global.fetch = jest.fn()
 
-    // create new instance of Outerbase
-    ob = new Outerbase({ token })
+    // create new instance of EZQL
+    ob = new EZQL({ token })
   })
 
   afterEach(() => {
