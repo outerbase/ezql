@@ -27,20 +27,21 @@ Use our hosted file or [save a local copy](https://ezql.ai/bundle.v1.js).
 ```html
 <script src="https://ezql.ai/bundle.v1.js" />
 <script>
-  document.addEventListener('DOMContentLoaded', function () {
-    const accessToken = 'arbitrary-placeholder-value'
-    const ez = new EZQL(accessToken)
-    const phrase = 'What is the answer to life, the univerise and everything?'
+  const token = 'arbitrary-placeholder-value'
+  const ez = new Outerbase.EZQL({ token })
+  const phrase = 'What is the answer to life, the univerise and everything?'
 
-    ez.prompt(phrase, 'sql').then((sqlText) => console.log(sqlText))
-    /* "SELECT answer FROM ultimate_question;" */
+  ez.prompt(phrase, 'sql').then((sqlText) => console.log(sqlText))
+  /* "SELECT answer FROM ultimate_question;" */
 
-    ez.prompt(phrase, 'data').then((data) => console.log(data))
-    /* "42" */
-  })
+  ez.prompt(phrase, 'data').then((data) => console.log(data))
+  /* "42" */
 </script>
 ```
 
 ## Custom API Endpoint
 
-You may customize the API endpoint by specifying the `API_HOST` environment variable.
+You may customize the API endpoint by
+
+- passing `host` to the constructor
+- specifying the `API_HOST` environment variable.
