@@ -1,12 +1,7 @@
-// Dotenv is a zero-dependency module that loads environment variables from a .env file into process.env
-import { config } from 'dotenv'
-config()
-
 import { DEFAULT_HOST, EZQL, Prompt } from '../src/ezql'
 
 describe('register EZQL', () => {
   const token = 'arbitrary-value'
-  const host = process.env.API_HOST
 
   let ob: EZQL
   let ogFetch: typeof global.fetch
@@ -26,7 +21,6 @@ describe('register EZQL', () => {
   afterEach(() => {
     // restore normal 'fetch' module
     global.fetch = ogFetch
-    process.env.API_HOST = host
   })
 
   test('rejects missing token', () => {
@@ -54,14 +48,15 @@ describe('register EZQL', () => {
   })
 
   test('utilizes env API_HOST', async () => {
-    expect.assertions(3)
+    expect.assertions(2)
 
     const differentHost = 'a different value'
     process.env.API_HOST = differentHost
 
-    expect(differentHost).not.toEqual(host)
     expect(ob.baseUrl).toEqual(process.env.API_HOST)
     expect(ob.baseUrl).not.toEqual(DEFAULT_HOST)
+
+    delete process.env.API_HOST
   })
 
   test('falls back to default host', () => {
@@ -78,7 +73,7 @@ describe('register EZQL', () => {
     const phrase = 'What is the answer to life, the univerise and everything?'
     const response = await ob.prompt(phrase, Prompt.data)
 
-    expect(fetch).toHaveBeenCalledWith(`${host}/ezql`, {
+    expect(fetch).toHaveBeenCalledWith(`${DEFAULT_HOST}/ezql`, {
       body: JSON.stringify({ phrase, type: 'data' }),
       headers: { Authorization: `Bearer ${token}` },
     })
@@ -94,7 +89,7 @@ describe('register EZQL', () => {
     const phrase = 'What is the answer to life, the univerise and everything?'
     const response = await ob.prompt(phrase, Prompt.sql)
 
-    expect(fetch).toHaveBeenCalledWith(`${host}/ezql`, {
+    expect(fetch).toHaveBeenCalledWith(`${DEFAULT_HOST}/ezql`, {
       body: JSON.stringify({ phrase, type: 'sql' }),
       headers: { Authorization: `Bearer ${token}` },
     })
