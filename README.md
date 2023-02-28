@@ -36,8 +36,8 @@
 
 <br />
 
-<a href="https://payloadcms.com">
-  <img src="./assets/ezql_hero.gif" alt="Payload headless CMS Admin panel built with React" />
+<a href="https://ezql.ai">
+  <img src="./assets/ezql_hero.gif" alt="EZQL ask your database questions using natural language." />
 </a>
 
 <br />
@@ -134,7 +134,7 @@ There are lots of good conversations and resources in our Github Discussions boa
 
 ## ⭐ Like what we're doing? Give us a star
 
-![payload-github-star](./assets/ezql_star.gif)
+![ezql-github-star](./assets/ezql_star.gif)
 
 ## 👏 Our contributors
 
