@@ -7,7 +7,7 @@ npm add ezql
 ```
 
 ```ts
-import EZQL from 'ezql' // const EZQL = require('ezql')
+import EZQL, { Prompt } from 'ezql' // const EZQL = require('ezql')
 
 const accessToken = 'arbitrary-placeholder-value'
 const ez = new EZQL(accessToken)
