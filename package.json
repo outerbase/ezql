@@ -4,7 +4,7 @@
   "description": "Ask your database questions, anywhere.",
   "main": "index.js",
   "scripts": {
-    "test:ci": "jest",
+    "test:watch": "jest --watch",
     "test": "jest --watch",
     "watch": "npx tsc -w"
   },
