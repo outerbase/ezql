@@ -1,4 +1,4 @@
-export type OuterbaseOpts = {
+export type EZQLOpts = {
   token: string
 }
 
@@ -7,10 +7,10 @@ export enum Prompt {
   data = 'data',
 }
 
-export default class Outerbase {
+export class EZQL {
   token: string
 
-  constructor({ token }: OuterbaseOpts) {
+  constructor({ token }: EZQLOpts) {
     this.token = token
   }
 
