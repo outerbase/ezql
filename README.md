@@ -61,6 +61,10 @@ EZQL democratizes the access to data by allowing anybody to ask their database q
 ```sh
 npm add ezql
 ```
+
+```sh
+yarn add ezql
+```
 <br />
 
 **Usage (TypeScript/ESM)**
@@ -76,7 +80,7 @@ const response = await ez.prompt(phrase, Prompt.sql)
 /* "SELECT answer FROM ultimate_question;" */
 
 const response = await ez.prompt(phrase, Prompt.data)
-/* "42" */
+/* [{ "value": 42 }] */
 ```
 <br />
 
@@ -106,7 +110,7 @@ Use our hosted file or [save a local copy](https://ezql.ai/bundle.v1.js).
   /* "SELECT answer FROM ultimate_question;" */
 
   ez.prompt(phrase, Outerbase.Prompt.data).then((data) => console.log(data))
-  /* "42" */
+  /* [{ "value": 42 }] */
 </script>
 ```
 <br />
