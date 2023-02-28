@@ -14,7 +14,13 @@ export class EZQL {
   token: string
   host: string | undefined
 
-  constructor({ token, host }: EZQLOpts) {
+  constructor(opts: EZQLOpts) {
+    if (!opts) throw new Error("Required options hash with param 'token' is missing, i.e. new EZQL({ token: 'your-value-here' })")
+
+    const { token, host } = opts
+
+    if (!token) throw new Error("Required 'token` param is missing form options hash, i.e. new EZQL({ token: 'your-value-here' })")
+
     this.token = token
     if (host) this.host = host
   }

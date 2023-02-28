@@ -64,8 +64,12 @@
     })(exports.Prompt || (exports.Prompt = {}));
     var DEFAULT_HOST = 'api.outerbase.com';
     var EZQL = /** @class */ (function () {
-        function EZQL(_a) {
-            var token = _a.token, host = _a.host;
+        function EZQL(opts) {
+            if (!opts)
+                throw new Error("Required options hash with param 'token' is missing, i.e. new EZQL({ token: 'your-value-here' })");
+            var token = opts.token, host = opts.host;
+            if (!token)
+                throw new Error("Required 'token` param is missing form options hash, i.e. new EZQL({ token: 'your-value-here' })");
             this.token = token;
             if (host)
                 this.host = host;
