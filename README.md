@@ -55,6 +55,18 @@ EZQL democratizes the access to data by allowing anybody to ask their database q
 <a target="_blank" href="https://github.com/outerbase/ezql/discussions"><strong>Request Feature</strong></a>
 <br />
 <br />
+
+## ⚡️ Before you get started
+Follow these steps to have a successful experience using EZQL:
+1. [Create an account](https://app.outerbase.com/signup) on Outerbase
+2. Attach the database you want to use
+3. [Reach out](https://join.slack.com/t/outerbasecommunity/shared_invite/zt-1ple7fhsg-2z6MIC_P4fzdrKe1koJ7kQ) to us for beta access
+4. Generate your EZQL token
+
+<br />
+<br />
+
+
 ## 🚀 Quick Start
 <br />
 
