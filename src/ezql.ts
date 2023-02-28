@@ -26,6 +26,7 @@ export class EZQL {
   }
 
   get baseUrl() {
+    // precedence: arg > env > default
     return this.host || process.env.API_HOST || DEFAULT_HOST
   }
 
