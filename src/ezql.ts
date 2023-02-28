@@ -1,5 +1,6 @@
 export type EZQLOpts = {
   token: string
+  host?: string
 }
 
 export enum Prompt {
@@ -7,15 +8,19 @@ export enum Prompt {
   data = 'data',
 }
 
+export const DEFAULT_HOST = 'api.outerbase.com'
+
 export class EZQL {
   token: string
+  host: string | undefined
 
-  constructor({ token }: EZQLOpts) {
+  constructor({ token, host }: EZQLOpts) {
     this.token = token
+    if (host) this.host = host
   }
 
   get baseUrl() {
-    return process.env.API_HOST || 'api.outerbase.com'
+    return this.host || process.env.API_HOST || DEFAULT_HOST
   }
 
   async prompt(phrase: string, type: Prompt): Promise<string> {
