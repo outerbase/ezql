@@ -29,6 +29,16 @@ describe('register EZQL', () => {
     process.env.API_HOST = host
   })
 
+  test('rejects missing token', () => {
+    // eslint-disable-next-line @typescript-eslint/ban-ts-comment
+    // @ts-ignore
+    expect(() => new EZQL()).toThrowError()
+
+    // eslint-disable-next-line @typescript-eslint/ban-ts-comment
+    // @ts-ignore
+    expect(() => new EZQL({})).toThrowError()
+  })
+
   test('accepts a valid token', () => {
     expect(ob.token).toEqual(token)
   })
