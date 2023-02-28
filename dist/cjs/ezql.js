@@ -36,20 +36,23 @@ var __generator = (this && this.__generator) || function (thisArg, body) {
     }
 };
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.EZQL = exports.Prompt = void 0;
+exports.EZQL = exports.DEFAULT_HOST = exports.Prompt = void 0;
 var Prompt;
 (function (Prompt) {
     Prompt["sql"] = "sql";
     Prompt["data"] = "data";
 })(Prompt = exports.Prompt || (exports.Prompt = {}));
+exports.DEFAULT_HOST = 'api.outerbase.com';
 var EZQL = /** @class */ (function () {
     function EZQL(_a) {
-        var token = _a.token;
+        var token = _a.token, host = _a.host;
         this.token = token;
+        if (host)
+            this.host = host;
     }
     Object.defineProperty(EZQL.prototype, "baseUrl", {
         get: function () {
-            return process.env.API_HOST || 'api.outerbase.com';
+            return this.host || process.env.API_HOST || exports.DEFAULT_HOST;
         },
         enumerable: false,
         configurable: true
