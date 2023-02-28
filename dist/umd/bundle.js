@@ -62,14 +62,17 @@
         Prompt["sql"] = "sql";
         Prompt["data"] = "data";
     })(exports.Prompt || (exports.Prompt = {}));
+    var DEFAULT_HOST = 'api.outerbase.com';
     var EZQL = /** @class */ (function () {
         function EZQL(_a) {
-            var token = _a.token;
+            var token = _a.token, host = _a.host;
             this.token = token;
+            if (host)
+                this.host = host;
         }
         Object.defineProperty(EZQL.prototype, "baseUrl", {
             get: function () {
-                return process.env.API_HOST || 'api.outerbase.com';
+                return this.host || process.env.API_HOST || DEFAULT_HOST;
             },
             enumerable: false,
             configurable: true
