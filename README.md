@@ -22,7 +22,11 @@
   </a>
   &nbsp;
   <a href="https://github.com/outerbase/ezql/actions">
-      <img alt="GitHub Workflow Status" src="https://img.shields.io/github/actions/workflow/status/outerbase/ezql/node.js.yml" />
+      <img alt="GitHub Workflow Status" src="https://img.shields.io/github/actions/workflow/status/outerbase/ezql/node.js.yml?style=flat-square" />
+  </a>
+  &nbsp;
+  <a href="https://github.com/Outerbase/ezql/blob/main/contributing.md">
+    <img src="https://img.shields.io/badge/PRs-welcome-brightgreen.svg?style=flat-square" alt="PRs welcome!" />
   </a>
   &nbsp;
   <a href="https://www.npmjs.com/package/ezql">
@@ -124,7 +128,7 @@ If you want to add contributions to this repository, please follow the instructi
 
 ## 🚨 Need help?
 
-There are lots of good conversations and resources in our Github Discussions board & our Discord Server. If you're struggling with something, chances are, someone's already solved what you're up against. :point_down:
+There are lots of good conversations and resources in our Github Discussions board & our Slack Server. If you're struggling with something, chances are, someone's already solved what you're up against. :point_down:
 
 - [GitHub Discussions](https://github.com/outerbase/ezql/discussions)
 - [GitHub Issues](https://github.com/outerbase/ezql/issues)
