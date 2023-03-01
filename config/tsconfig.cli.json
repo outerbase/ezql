@@ -1,5 +1,6 @@
 {
   "include": ["../cli/**/*", "../src/**/*"],
+  "exclude": ["../src/lit-ezql"],
   "compilerOptions": {
     "rootDir": "..",
     "outDir": "../dist",
