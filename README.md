@@ -132,7 +132,7 @@ Use our hosted file or [save a local copy](https://ezql.ai/bundle.v1.js).
 You may customize the API endpoint by
 
 - passing `host` to the constructor
-- specifying the `API_HOST` environment variable.
+- specifying the `OUTERBASE_EZQL_HOST` environment variable.
 
 <br />
 

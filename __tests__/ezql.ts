@@ -47,16 +47,16 @@ describe('register EZQL', () => {
     expect(ob.baseUrl).not.toEqual(DEFAULT_HOST)
   })
 
-  test('utilizes env API_HOST', async () => {
+  test('utilizes env OUTERBASE_EZQL_HOST', async () => {
     expect.assertions(2)
 
     const differentHost = 'a different value'
-    process.env.API_HOST = differentHost
+    process.env.OUTERBASE_EZQL_HOST = differentHost
 
-    expect(ob.baseUrl).toEqual(process.env.API_HOST)
+    expect(ob.baseUrl).toEqual(process.env.OUTERBASE_EZQL_HOST)
     expect(ob.baseUrl).not.toEqual(DEFAULT_HOST)
 
-    delete process.env.API_HOST
+    delete process.env.OUTERBASE_EZQL_HOST
   })
 
   test('falls back to default host', () => {
