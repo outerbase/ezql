@@ -32,7 +32,7 @@ export class EZQL {
       // non-node environemnt (e.g. the browser)
       return this.host || DEFAULT_HOST
     } else {
-      return this.host || process.env.API_HOST || DEFAULT_HOST
+      return this.host || process.env.OUTERBASE_EZQL_HOST || DEFAULT_HOST
     }
   }
 
