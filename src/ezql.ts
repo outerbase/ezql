@@ -12,7 +12,7 @@ export const DEFAULT_HOST = 'api.outerbase.com'
 
 export class EZQL {
   token: string
-  host: string | undefined
+  host?: string
 
   constructor(opts: EZQLOpts) {
     if (!opts) throw new Error("Required options hash with param 'token' is missing, i.e. new EZQL({ token: 'your-value-here' })")
@@ -41,8 +41,8 @@ export class EZQL {
     if (!phrase || !type) throw new Error(`EZQL.prompt requires a 'phrase' and 'type' parameter`)
     if (!Object.values(Prompt).includes(type)) throw new Error(`EZQL.Prompt requires 'type' in [${Object.values(Prompt)}]`)
 
-    const result = await fetch(`${this.baseUrl}/ezql`, {
-      body: JSON.stringify({ phrase, type }),
+    const params = new URLSearchParams({ phrase, type })
+    const result = await fetch(`https://${this.baseUrl}/ezql?${params}`, {
       headers: {
         Authorization: `Bearer ${this.token}`,
       },
