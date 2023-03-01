@@ -1,3 +1,6 @@
+# Project
+demo/web/bundle.*
+
 # Logs
 logs
 *.log

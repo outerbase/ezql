@@ -1,0 +1,23 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta http-equiv="X-UA-Compatible" content="ie=edge" />
+    <title>EZQL Demo</title>
+  </head>
+  <body>
+    <!-- bundle.js is made available via `npm run update:demo`, a task that is automatically run by GitHub Actions when deploying the Page -->
+    <script src="bundle.js"></script>
+    <script>
+      const ezql = new Outerbase.EZQL({ token: '8ab87a90-some-fake-uuid-c9bdb9974ce9' })
+      console.debug('Created EZQL instance at `window.ezql`')
+      console.debug(ezql)
+
+      console.info('You may now access the instantiated EZQL instance globally as `ezql`')
+      console.info('See documentation at https://github.com/Outerbase/ezql#readme')
+      console.info('Query for results:\t ezql.prompt("How much money did we make last week", Outerbase.Prompt.data)')
+      console.info('Query for SQL:\t ezql.prompt("How much money did we make last week", Outerbase.Prompt.sql)')
+    </script>
+  </body>
+</html>
