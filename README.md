@@ -57,7 +57,9 @@ EZQL democratizes the access to data by allowing anybody to ask their database q
 <br />
 
 ## ⚡️ Before you get started
+
 Follow these steps to have a successful experience using EZQL:
+
 1. [Create an account](https://app.outerbase.com/signup) on Outerbase
 2. Attach the database you want to use
 3. [Reach out](https://join.slack.com/t/outerbasecommunity/shared_invite/zt-1ple7fhsg-2z6MIC_P4fzdrKe1koJ7kQ) to us for beta access
@@ -66,8 +68,8 @@ Follow these steps to have a successful experience using EZQL:
 <br />
 <br />
 
-
 ## 🚀 Quick Start
+
 <br />
 
 ```sh
@@ -77,6 +79,7 @@ npm add ezql
 ```sh
 yarn add ezql
 ```
+
 <br />
 
 **Usage (TypeScript/ESM)**
@@ -94,6 +97,7 @@ const response = await ez.prompt(phrase, Prompt.sql)
 const response = await ez.prompt(phrase, Prompt.data)
 /* [{ "value": 42 }] */
 ```
+
 <br />
 
 **Usage (Node.JS/CJS)**
@@ -103,6 +107,7 @@ const { Prompt, EZQL } = require('ezql')
 
 // the remainder is identical to TypeScript usage (see above)
 ```
+
 <br />
 
 **Usage (Web/UMD)**
@@ -110,7 +115,7 @@ const { Prompt, EZQL } = require('ezql')
 Use our hosted file or [save a local copy](https://ezql.ai/bundle.v1.js).
 
 ```html
-<script src="https://ezql.ai/bundle.v1.js" />
+<script src="https://ezql.ai/bundle.v1.js"></script>
 <script>
   // A global variable `Outerbase` is now exposed
 
@@ -125,6 +130,7 @@ Use our hosted file or [save a local copy](https://ezql.ai/bundle.v1.js).
   /* [{ "value": 42 }] */
 </script>
 ```
+
 <br />
 
 **Custom API Endpoint**
