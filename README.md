@@ -112,10 +112,10 @@ const { Prompt, EZQL } = require('ezql')
 
 **Usage (Web/UMD)**
 
-Use our hosted file or [save a local copy](https://ezql.ai/bundle.v1.js).
+Use our hosted file or [save a local copy](https://outerbase.github.io/ezql/bundle.js).
 
 ```html
-<script src="https://ezql.ai/bundle.v1.js"></script>
+<script src="https://outerbase.github.io/ezql/bundle.js"></script>
 <script>
   // A global variable `Outerbase` is now exposed
 
