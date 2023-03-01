@@ -9,7 +9,7 @@ export declare enum Prompt {
 export declare const DEFAULT_HOST = "api.outerbase.com";
 export declare class EZQL {
     token: string;
-    host: string | undefined;
+    host?: string;
     constructor(opts: EZQLOpts);
     get baseUrl(): string;
     prompt(phrase: string, type: Prompt): Promise<string>;

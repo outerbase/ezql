@@ -54,14 +54,20 @@ var EZQL = /** @class */ (function () {
     Object.defineProperty(EZQL.prototype, "baseUrl", {
         get: function () {
             // precedence: arg > env > default
-            return this.host || process.env.API_HOST || DEFAULT_HOST;
+            if (typeof process === 'undefined') {
+                // non-node environemnt (e.g. the browser)
+                return this.host || DEFAULT_HOST;
+            }
+            else {
+                return this.host || process.env.OUTERBASE_EZQL_HOST || DEFAULT_HOST;
+            }
         },
         enumerable: false,
         configurable: true
     });
     EZQL.prototype.prompt = function (phrase, type) {
         return __awaiter(this, void 0, void 0, function () {
-            var result;
+            var params, result;
             return __generator(this, function (_a) {
                 switch (_a.label) {
                     case 0:
@@ -70,8 +76,8 @@ var EZQL = /** @class */ (function () {
                             throw new Error("EZQL.prompt requires a 'phrase' and 'type' parameter");
                         if (!Object.values(Prompt).includes(type))
                             throw new Error("EZQL.Prompt requires 'type' in [".concat(Object.values(Prompt), "]"));
-                        return [4 /*yield*/, fetch("".concat(this.baseUrl, "/ezql"), {
-                                body: JSON.stringify({ phrase: phrase, type: type }),
+                        params = new URLSearchParams({ phrase: phrase, type: type });
+                        return [4 /*yield*/, fetch("https://".concat(this.baseUrl, "/ezql?").concat(params), {
                                 headers: {
                                     Authorization: "Bearer ".concat(this.token),
                                 },
