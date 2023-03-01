@@ -1,0 +1,14 @@
+{
+  "include": ["../cli/**/*", "../src/**/*"],
+  "compilerOptions": {
+    "rootDir": "..",
+    "outDir": "../dist",
+    "strict": true,
+    "target": "es6",
+    "module": "commonjs",
+    "sourceMap": true,
+    "esModuleInterop": true,
+    "resolveJsonModule": true,
+    "moduleResolution": "node"
+  }
+}
