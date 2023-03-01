@@ -21,6 +21,7 @@
     "build:esm": "tsc -p config/tsconfig.esm.json",
     "build:types": "tsc -p config/tsconfig.types.json",
     "build:umd": "rollup --config --bundleConfigAsCjs",
+    "update:demo": "npm run build:umd && node demo/copy-assets.mjs",
     "prepare": "husky install",
     "postinstall": "npm run build:cli"
   },

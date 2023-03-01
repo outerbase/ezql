@@ -15,11 +15,17 @@ export class EZQL {
   host?: string
 
   constructor(opts: EZQLOpts) {
-    if (!opts) throw new Error("Required options hash with param 'token' is missing, i.e. new EZQL({ token: 'your-value-here' })")
+    if (!opts)
+      throw new Error(
+        "Required options hash with param 'token' is missing, i.e. new EZQL({ token: 'your-value-here' })"
+      )
 
     const { token, host } = opts
 
-    if (!token) throw new Error("Required 'token` param is missing form options hash, i.e. new EZQL({ token: 'your-value-here' })")
+    if (!token)
+      throw new Error(
+        "Required 'token` param is missing form options hash, i.e. new EZQL({ token: 'your-value-here' })"
+      )
 
     this.token = token
     if (host) this.host = host
@@ -39,7 +45,8 @@ export class EZQL {
   async prompt(phrase: string, type: Prompt): Promise<string> {
     // console.debug(`prompt("${phrase}", ${type})`)
     if (!phrase || !type) throw new Error(`EZQL.prompt requires a 'phrase' and 'type' parameter`)
-    if (!Object.values(Prompt).includes(type)) throw new Error(`EZQL.Prompt requires 'type' in [${Object.values(Prompt)}]`)
+    if (!Object.values(Prompt).includes(type))
+      throw new Error(`EZQL.Prompt requires 'type' in [${Object.values(Prompt)}]`)
 
     const params = new URLSearchParams({ phrase, type })
     const result = await fetch(`https://${this.baseUrl}/ezql?${params}`, {

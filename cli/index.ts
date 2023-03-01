@@ -18,7 +18,10 @@ program
   .option('-h, --host <value>', 'API host used for requests. Defaults to "api.outerbase.com".')
   .action(async (query, { execute, host, token: _token }) => {
     const token = _token || process.env.OUTERBASE_EZQL_TOKEN
-    if (!token) throw new Error('"token" must be provided either as an argument (--token) or via the environment variable "OUTERBASE_EZQL_TOKEN"')
+    if (!token)
+      throw new Error(
+        '"token" must be provided either as an argument (--token) or via the environment variable "OUTERBASE_EZQL_TOKEN"'
+      )
 
     const ezql = new EZQL({ token, host })
     const response = await ezql.prompt(query, execute ? Prompt.data : Prompt.sql)
