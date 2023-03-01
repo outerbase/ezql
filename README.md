@@ -142,6 +142,11 @@ You may customize the API endpoint by
 
 <br />
 
+## 🎭 Live Demonstration
+
+- Visit [https://outerbase.github.io/ezql/](https://outerbase.github.io/ezql/)
+- Open the Web Inspector to interact with the EZQL library
+
 ## 🙋 Contributing
 
 If you want to add contributions to this repository, please follow the instructions in [contributing.md](./contributing.md).
