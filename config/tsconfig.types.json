@@ -1,7 +1,8 @@
 {
   "extends": "../tsconfig",
+  "exclude": ["../src/react-ezql", "../src/cli"],
   "compilerOptions": {
-    "declaration": true /* Generates corresponding '.d.ts' file. */,
+    "declaration": true,
     "emitDeclarationOnly": true,
     "outDir": "../dist/types" /* Redirect output structure to the directory. */
   }

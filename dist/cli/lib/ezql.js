@@ -59,4 +59,3 @@ class EZQL {
     }
 }
 exports.EZQL = EZQL;
-//# sourceMappingURL=ezql.js.map
