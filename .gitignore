@@ -1,5 +1,6 @@
 # Project
 demo/web/bundle.*
+src/react-ezql/dist
 
 # Logs
 logs
