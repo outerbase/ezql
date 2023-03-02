@@ -11,11 +11,11 @@ var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, ge
 };
 Object.defineProperty(exports, "__esModule", { value: true });
 const extra_typings_1 = require("@commander-js/extra-typings");
-const index_1 = require("../src/index");
-const package_json_1 = require("../package.json");
+const index_1 = require("../lib/index");
+const version = '0.0.2';
 const program = new extra_typings_1.Command();
 program
-    .version(package_json_1.version)
+    .version(version)
     .description('A natural language to SQL converter')
     .argument('<phrase>', 'A query written in natural language to be executed against your database.')
     .option('-e, --execute', 'Specifies whether to automatically execute the generated SQL statement. Defaults to false.')
@@ -31,4 +31,3 @@ program
     console.log(response);
 }))
     .parse(process.argv);
-//# sourceMappingURL=index.js.map

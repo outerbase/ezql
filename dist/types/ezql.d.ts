@@ -14,4 +14,3 @@ export declare class EZQL {
     get baseUrl(): string;
     prompt(phrase: string, type: Prompt): Promise<string>;
 }
-//# sourceMappingURL=ezql.d.ts.map
