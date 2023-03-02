@@ -1,9 +1,9 @@
 #! /usr/bin/env node
 
 import { Command } from '@commander-js/extra-typings'
-import { EZQL, Prompt } from '../src/index'
-import { version } from '../package.json'
+import { EZQL, Prompt } from '../lib/index'
 
+const version = '0.0.2'
 const program = new Command()
 
 program

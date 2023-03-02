@@ -119,6 +119,7 @@
         return EZQL;
     }());
 
+    exports.DEFAULT_HOST = DEFAULT_HOST;
     exports.EZQL = EZQL;
 
 }));

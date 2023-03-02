@@ -1,4 +1,4 @@
-import { DEFAULT_HOST, EZQL, Prompt } from '../src/ezql'
+import { DEFAULT_HOST, EZQL, Prompt } from '../../src/lib/ezql'
 
 describe('register EZQL', () => {
   const token = 'arbitrary-value'

@@ -1,7 +1,7 @@
 {
-  "include": ["../cli/**/*", "../src/**/*"],
+  "include": ["../src/cli"],
   "compilerOptions": {
-    "rootDir": "..",
+    "rootDir": "../src",
     "outDir": "../dist",
     "strict": true,
     "target": "es6",
