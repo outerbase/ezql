@@ -1,3 +1,3 @@
-export default function EzqlPrompt() {
-  return <div>Coming soon.</div>
-}
+import EzqlPrompt from './components/ezql-prompt'
+
+export { EzqlPrompt }

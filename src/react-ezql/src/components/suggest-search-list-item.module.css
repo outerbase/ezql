@@ -1,0 +1,37 @@
+.list_item {
+  display: flex;
+  padding: 8px 0;
+  border-radius: 4px;
+}
+
+.list_item:not(:first-child) {
+  margin-top: 8px;
+}
+
+.list_item:not(:last-child) {
+  margin-bottom: 8px;
+}
+
+.list_item:hover,
+.list_item:focus {
+  background-color: var(--color-gray-300);
+  outline: none;
+}
+
+.suggested_text {
+  text-overflow: ellipsis;
+  overflow-y: hidden;
+  white-space: nowrap;
+  flex: auto;
+}
+
+.search_icon,
+.arrow_right_icon {
+  margin-left: 0.75rem /* 12px */;
+  margin-right: 0.75rem /* 12px */;
+  filter: var(--filter-color-gray-800);
+}
+
+.arrow_right_icon {
+  filter: var(--filter-color-gray-600);
+}

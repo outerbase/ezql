@@ -21,7 +21,7 @@
     "test": "vitest run",
     "watch": "vitest",
     "coverage": "vitest run --coverage",
-    "prepare": "rm -rf ./dist && npm run build"
+    "prepack": "rm -rf ./dist && npm run build"
   },
   "browserslist": {
     "production": [
@@ -39,7 +39,8 @@
     "env": {
       "browser": true,
       "node": true,
-      "es2020": true
+      "es2020": true,
+      "react/react-in-jsx-scope": "off"
     },
     "extends": [
       "eslint:recommended",

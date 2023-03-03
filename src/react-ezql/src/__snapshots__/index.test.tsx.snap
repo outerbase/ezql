@@ -1,7 +1,67 @@
 // Vitest Snapshot v1, https://vitest.dev/guide/snapshot.html
 
 exports[`EzqlPrompt > component renders correctly 1`] = `
-<div>
-  Coming soon.
+<div
+  aria-labelledby="modal-title"
+  aria-modal="true"
+  className="_parent_249b39 ezql-prompt-modal"
+  onClick={[Function]}
+  role="dialog"
+>
+  <div
+    className="_backdrop_shadow_249b39"
+  />
+  <div
+    className="_container_249b39"
+  >
+    <div
+      className="_backdrop_249b39"
+    >
+      <div
+        className="_foreground_249b39"
+      >
+        <div>
+          <div
+            className="_container_6325f9 container"
+          >
+            <div
+              className="_input_container_6325f9 input-container"
+            >
+              <div
+                className="_input_icon_container_6325f9 input-icon-container"
+              >
+                <img
+                  alt="EZQL Icon"
+                  className="_input_icon_6325f9 input-icon"
+                  src="ezql_diamond-small.png"
+                />
+              </div>
+              <input
+                autoFocus={true}
+                className="_input_6325f9 typography_text_large"
+                onChange={[Function]}
+                onKeyDown={[Function]}
+                placeholder="Search your database..."
+                type="text"
+                value=""
+              />
+            </div>
+            <div
+              className="_suggestions_container_6325f9 suggestions-container"
+            >
+              <span
+                className="_suggestions_hint_6325f9 typography_text_small suggestions-hint"
+              >
+                Search via plain text EZQL will automatically convert it to a SQL query, you could also try one of the generated prompts.
+              </span>
+              <ul
+                className="_suggestions_list_6325f9 suggestions-list"
+              />
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
 </div>
 `;

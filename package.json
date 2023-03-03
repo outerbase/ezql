@@ -26,7 +26,7 @@
     "build:umd": "rollup --config config/rollup.config.js --bundleConfigAsCjs",
     "update:demo": "npm run build:umd && node demo/copy-assets.mjs",
     "prepare": "husky install",
-    "prepack": "npm run build"
+    "prepack": "rm -rf ./dist && npm run build"
   },
   "repository": {
     "type": "git",
