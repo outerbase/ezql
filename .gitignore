@@ -1,4 +1,5 @@
 # Project
+dist
 demo/web/bundle.*
 
 # Logs

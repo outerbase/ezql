@@ -25,7 +25,8 @@
     "build:types": "tsc -p config/tsconfig.types.json",
     "build:umd": "rollup --config config/rollup.config.js --bundleConfigAsCjs",
     "update:demo": "npm run build:umd && node demo/copy-assets.mjs",
-    "prepare": "husky install"
+    "prepare": "husky install",
+    "prepack": "npm run build"
   },
   "repository": {
     "type": "git",
