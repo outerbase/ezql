@@ -1,14 +1,17 @@
 {
   "name": "ezql",
-  "version": "0.0.2",
+  "version": "0.0.3",
   "description": "Ask your database questions, anywhere.",
   "main": "dist/cjs/index.js",
   "module": "dist/esm/index.js",
   "umd:main": "dist/umd/index.js",
   "types": "dist/types/index.d.js",
   "bin": {
-    "ezql": "dist/cli/index.js"
+    "ezql": "dist/cli/cli/index.js"
   },
+  "files": [
+    "dist"
+  ],
   "scripts": {
     "test:watch": "jest --config config/jest.config.js --watch",
     "test": "jest --config config/jest.config.js",
@@ -22,8 +25,7 @@
     "build:types": "tsc -p config/tsconfig.types.json",
     "build:umd": "rollup --config config/rollup.config.js --bundleConfigAsCjs",
     "update:demo": "npm run build:umd && node demo/copy-assets.mjs",
-    "prepare": "husky install",
-    "postinstall": "npm run build:cli"
+    "prepare": "husky install"
   },
   "repository": {
     "type": "git",
