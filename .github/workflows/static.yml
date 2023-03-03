@@ -30,16 +30,24 @@ jobs:
     steps:
       - name: Checkout
         uses: actions/checkout@v3
+      - name: Set up Node
+        uses: actions/setup-node@v3
+        with:
+          node-version: 18
+          cache: 'npm'
+      - name: Install dependencies
+        working-directory: ./src/react-ezql
+        run: npm install
+      - name: Build
+        working-directory: ./src/react-ezql
+        run: npm run build:web
       - name: Setup Pages
         uses: actions/configure-pages@v3
-      - name: Install rollup.js
-        run: npm install rollup@3
-      - name: Copy bundled EZQL to web directory
-        run: npm run update:demo
       - name: Upload artifact
         uses: actions/upload-pages-artifact@v1
         with:
-          path: './demo/web'
+          # Upload dist repository
+          path: './src/react-ezql/dist/page'
       - name: Deploy to GitHub Pages
         id: deployment
         uses: actions/deploy-pages@v1
