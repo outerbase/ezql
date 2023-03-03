@@ -4,24 +4,26 @@
   "type": "module",
   "files": [
     "README.md",
-    "dist"
+    "dist/module"
   ],
-  "main": "./dist/ezql-prompt.umd.js",
-  "module": "./dist/ezql-prompt.es.js",
+  "main": "./dist/module/ezql-prompt.umd.js",
+  "module": "./dist/module/ezql-prompt.es.js",
   "exports": {
     ".": {
-      "import": "./dist/ezql-prompt.es.js",
-      "require": "./dist/ezql-prompt.umd.js"
+      "import": "./dist/module/ezql-prompt.es.js",
+      "require": "./dist/module/ezql-prompt.umd.js"
     }
   },
   "scripts": {
     "dev": "vite",
-    "build": "tsc && vite build",
-    "preview": "vite preview",
+    "build": "rm -rf ./dist && npm run build:module && npm run build:page",
+    "build:module": "tsc && vite --config vite.config.module.ts build",
+    "build:web": "tsc && vite --config vite.config.web.ts build",
+    "preview": "vite --config vite.config.web.ts preview",
     "test": "vitest run",
     "watch": "vitest",
     "coverage": "vitest run --coverage",
-    "prepack": "rm -rf ./dist && npm run build"
+    "prepack": "rm -rf ./dist && npm run build:module"
   },
   "browserslist": {
     "production": [

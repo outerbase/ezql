@@ -27,6 +27,10 @@ function App() {
 
   return (
     <>
+      <p>
+        Press <i>Command-K</i> to display EZQL, <i>Escape</i> to dismiss.
+      </p>
+
       {shouldDisplayEzql && (
         <EzqlPrompt
           setShouldDisplayEzql={setShouldDisplayEzql}
