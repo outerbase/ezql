@@ -84,15 +84,14 @@ describe('register EZQL', () => {
     const mockedResponse = '42'
     fetch.mockResolvedValue(new Response(mockedResponse))
 
-    const phrase = 'What is the answer to life, the univerise and everything?'
-    const response = await ob.prompt(phrase, Prompt.data)
+    const query = 'What is the answer to life, the univerise and everything?'
+    const response = await ob.prompt(query, Prompt.data)
 
-    expect(fetch).toHaveBeenCalledWith(
-      `https://${DEFAULT_HOST}/ezql?phrase=What+is+the+answer+to+life%2C+the+univerise+and+everything%3F&type=data`,
-      {
-        headers: { Authorization: `Bearer ${token}` },
-      }
-    )
+    expect(fetch).toHaveBeenCalledWith(`https://${DEFAULT_HOST}/api/v1/ezql`, {
+      headers: { 'Content-Type': 'application/json', 'x-source-token': token },
+      body: JSON.stringify({ query, run: true }),
+      method: 'POST',
+    })
     expect(response).toEqual(mockedResponse)
   })
 
@@ -102,15 +101,14 @@ describe('register EZQL', () => {
     const mockedResponse = 'SELECT answer FROM ultimate_question;'
     fetch.mockResolvedValue(new Response(mockedResponse))
 
-    const phrase = 'What is the answer to life, the univerise and everything?'
-    const response = await ob.prompt(phrase, Prompt.sql)
+    const query = 'What is the answer to life, the univerise and everything?'
+    const response = await ob.prompt(query, Prompt.sql)
 
-    expect(fetch).toHaveBeenCalledWith(
-      `https://${DEFAULT_HOST}/ezql?phrase=What+is+the+answer+to+life%2C+the+univerise+and+everything%3F&type=sql`,
-      {
-        headers: { Authorization: `Bearer ${token}` },
-      }
-    )
+    expect(fetch).toHaveBeenCalledWith(`https://${DEFAULT_HOST}/api/v1/ezql`, {
+      headers: { 'Content-Type': 'application/json', 'x-source-token': token },
+      body: JSON.stringify({ query, run: false }),
+      method: 'POST',
+    })
     expect(response).toEqual(mockedResponse)
   })
 })
