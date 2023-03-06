@@ -8,7 +8,7 @@ export enum Prompt {
   data = 'data',
 }
 
-export const DEFAULT_HOST = 'api.outerbase.com'
+export const DEFAULT_HOST = 'app.outerbase.com'
 
 export class EZQL {
   token: string
@@ -48,11 +48,16 @@ export class EZQL {
     if (!Object.values(Prompt).includes(type))
       throw new Error(`EZQL.Prompt requires 'type' in [${Object.values(Prompt)}]`)
 
-    const params = new URLSearchParams({ phrase, type })
-    const result = await fetch(`https://${this.baseUrl}/ezql?${params}`, {
+    const result = await fetch(`https://${this.baseUrl}/api/v1/ezql`, {
+      method: 'POST',
       headers: {
-        Authorization: `Bearer ${this.token}`,
+        'Content-Type': 'application/json',
+        'x-source-token': this.token,
       },
+      body: JSON.stringify({
+        query: phrase,
+        run: type === Prompt.data,
+      }),
     })
 
     if (result.status === 200) return result.text()
