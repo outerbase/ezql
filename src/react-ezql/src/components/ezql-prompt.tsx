@@ -6,6 +6,7 @@ import { classNames } from '../lib/class-names'
 import styles from './ezql-prompt.module.css'
 
 export type EzqlPromptOpts = {
+  token: string
   setShouldDisplayEzql: (value: boolean) => void
   onResults: (data: object) => void
   didSubmitWithValue?: (query: string) => void
@@ -14,6 +15,7 @@ export type EzqlPromptOpts = {
 }
 
 export default function EzqlPrompt({
+  token,
   setShouldDisplayEzql,
   didSubmitWithValue,
   onResults,
