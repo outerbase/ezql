@@ -1,0 +1,62 @@
+:root {
+  --color-gray-300: #eeeeee;
+  --color-gray-500: #959497;
+  --color-gray-600: #5e5d61;
+  --color-gray-800: #03020c;
+}
+
+.suggestions_list {
+  padding: 0;
+  cursor: pointer;
+  color: var(--color-gray-800);
+}
+
+.container {
+  display: flex;
+  flex: auto;
+  flex-direction: column;
+}
+
+.input_container {
+  display: flex;
+  border-bottom: 1px solid var(--color-gray-300);
+  padding: 0 16px 8px 16px;
+  margin: 8px 0 8px 0;
+  padding-bottom: 8px;
+  /* flex: 1 1 auto; */
+}
+
+.input_icon_container {
+  margin-right: 0.5rem /* 8px */;
+  display: flex;
+  align-items: center;
+}
+
+.input_icon {
+  margin-left: -0.25rem /* -4px */;
+}
+
+.input {
+  background: transparent;
+  text-align: center;
+  width: 100%;
+  text-align: left;
+  color: var(--color-gray-800);
+  border: none;
+}
+
+input::placeholder {
+  color: var(--color-gray-500);
+}
+
+.suggestions_container {
+  padding-left: 1rem /* 16px */;
+  padding-right: 1rem /* 16px */;
+  display: flex;
+  flex-direction: column;
+  flex: 1 1 auto;
+}
+
+.suggestions_hint {
+  color: var(--color-gray-500);
+}

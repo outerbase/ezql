@@ -81,8 +81,7 @@ describe('register EZQL', () => {
   test('prompt.data yields data', async () => {
     expect.assertions(2)
 
-    const mockedResponse = '42'
-    fetch.mockResolvedValue(new Response(mockedResponse))
+    fetch.mockResolvedValue(new Response('42'))
 
     const query = 'What is the answer to life, the univerise and everything?'
     const response = await ob.prompt(query, Prompt.data)
@@ -92,23 +91,26 @@ describe('register EZQL', () => {
       body: JSON.stringify({ query, run: true }),
       method: 'POST',
     })
-    expect(response).toEqual(mockedResponse)
+    expect(response).toEqual(42)
   })
 
   test('prompt.sql yields SQL', async () => {
     expect.assertions(2)
 
-    const mockedResponse = 'SELECT answer FROM ultimate_question;'
+    const serverResponse = {"response": {"query": {"text": "SELECT answer FROM ultimate_question;"}}, "success": true}
+    const mockedResponse = JSON.stringify(serverResponse)
+    
     fetch.mockResolvedValue(new Response(mockedResponse))
 
     const query = 'What is the answer to life, the univerise and everything?'
-    const response = await ob.prompt(query, Prompt.sql)
+    const clientResponse = await ob.prompt(query, Prompt.sql)
 
     expect(fetch).toHaveBeenCalledWith(`https://${DEFAULT_HOST}/api/v1/ezql`, {
       headers: { 'Content-Type': 'application/json', 'x-source-token': token },
       body: JSON.stringify({ query, run: false }),
       method: 'POST',
     })
-    expect(response).toEqual(mockedResponse)
+
+    expect(clientResponse).toEqual(serverResponse)
   })
 })

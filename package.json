@@ -1,6 +1,6 @@
 {
   "name": "ezql",
-  "version": "0.0.3",
+  "version": "0.0.4",
   "description": "Ask your database questions, anywhere.",
   "main": "dist/cjs/index.js",
   "module": "dist/esm/index.js",
@@ -26,7 +26,7 @@
     "build:umd": "rollup --config config/rollup.config.js --bundleConfigAsCjs",
     "update:demo": "npm run build:umd && node demo/copy-assets.mjs",
     "prepare": "husky install",
-    "prepack": "npm run build"
+    "prepack": "rm -rf ./dist && npm run build"
   },
   "repository": {
     "type": "git",
