@@ -19,14 +19,28 @@
 
       // wait for the Input field to be rendered / available
       document.addEventListener('DOMContentLoaded', function (event) {
-        const input = document.getElementById('token-input')
-        input.addEventListener('keypress', () => {
+        const tokenInput = document.getElementById('token-input')
+        tokenInput.addEventListener('keyup', () => {
           // use setTimeout because the value added as a result of this keypress
           // isn't updated until the next iteration of the event loop
           setTimeout(() => {
             // update `ezql` instance to use latest token
-            ezql = new Outerbase.EZQL({ token: input.value })
+            ezql = new Outerbase.EZQL({ token: tokenInput.value })
+            console.log(ezql)
           }, 0)
+        })
+
+        const promptInput = document.getElementById('prompt-input')
+        promptInput.addEventListener('keyup', () => {
+          document.getElementById('code-to-be-called').innerHTML = `ezql.prompt('${promptInput.value}', Outerbase.Prompt.sql)`
+        })
+
+        document.getElementById('run-btn').addEventListener('click', () => {
+          ezql.prompt(`${promptInput.value}`, Outerbase.Prompt.sql).then((response) => {
+            const parsed = JSON.parse(response)
+            document.getElementById('result-displayer').innerHTML = JSON.stringify(parsed, null, 2)
+            document.getElementById('sql-displayer').innerHTML = JSON.parse(response).response.query.text
+          })
         })
       })
     </script>
@@ -38,8 +52,25 @@
         placeholder="Enter your DB token as provided from Outerbase"
         style="padding: 8px; width: 80%"
       />
+      <label for="prompt-input" style="display:block; margin-top:1rem">Prompt</label>
+      <input
+        id="prompt-input"
+        type="text"
+        placeholder="Enter your query in natural language (e.g. 'How many books sold last week')"
+        style="padding: 8px; width: 80%"
+      />
+
+      <pre id="code-to-be-called"></pre>
+
+      <button id="run-btn">Run</button>
 
       <p>Open the JavaScript Console (Command + Option + J) to interact with the EZQL module.</p>
+
+      <h2>Response</h2>
+      <pre id="result-displayer">Will appear here</pre>
+
+      <h2>SQL</h2>
+      <p id="sql-displayer" style="white-space: pre-wrap;">Will appear here</p>
     </div>
   </body>
 </html>
