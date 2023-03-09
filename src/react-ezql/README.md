@@ -7,11 +7,18 @@ npm install --save-dev react-ezql
 ## Usage
 
 **Minimal usage**
+- `token` is provided from the Outerbase dashboard
+- `suggestions` - a list of queries that can be chosen from a list
+- `setShouldDisplayEzql` is a setter for toggling whether the modal is displayed; provide a setter that when true will remove the modal from your page
+- `didSubmitWithValue` is called when a query has been submitted to the modal _before_ a request has been made to Outerbase
+- `onResults` is called with the resulting SQL string or JSON data (depending on the Prompt type specified)
+- `className` provides optional styling classes to be added to the modal
 
 ```tsx
 import EzqlPrompt from 'react-ezql'
 
 <EzqlPrompt
+  token={'arbitrary-value-asdf-1234'}
   setShouldDisplayEzql={setShouldDisplayEzql}
   suggestions={['How many books sold last week', 'How many new users signed up today']}
   didSubmitWithValue={(value) => {
@@ -92,4 +99,18 @@ Each HTML Element has been an assigned a meaningful classname that you can style
 .arbitrary-value .input-container {
   color: white;
 }
+```
+
+## Local development of react-ezql
+pnpm is recommended as `npm link` does not work properly (as of 03/09/2023) with regards to `npm link`ing `lib/ezql` to `react-ezql`. Instead, do this from the `react-ezql` directory:
+
+```sh
+pnpm install
+pnpm link ../../
+```
+
+And be sure to have also built your latest changes in `lib/ezql`, i.e.:
+
+```sh
+npm run build
 ```

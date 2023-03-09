@@ -2,41 +2,47 @@ import { useCallback, useRef, useState } from 'react'
 import Modal from './modal'
 import { SuggestSearchListItem } from './suggest-search-list-item'
 import { classNames } from '../lib/class-names'
-import {EZQL, Prompt} from 'ezql'
+import { EZQL, Prompt } from 'ezql'
 
 import styles from './ezql-prompt.module.css'
 
 export type EzqlPromptOpts = {
   token: string
   setShouldDisplayEzql: (value: boolean) => void
-  onResults: (data: object) => void
+  onResults: (data: string | Object) => void
   didSubmitWithValue?: (query: string) => void
   suggestions?: Array<string>
   className?: string
 }
 
 export default function EzqlPrompt({
-  token,
-  setShouldDisplayEzql,
-  didSubmitWithValue,
-  onResults,
-  suggestions,
-  className,
+  token, // authenticates and identifies the scope of this request with Outerbase
+  setShouldDisplayEzql, // toggles display of the modal
+  didSubmitWithValue, // fires before the request goes to Outerbase
+  onResults, // fires upon receiving a response from Outerbase
+  suggestions, // pre-populate the list of suggested queries
+  className, // optional styling classes
 }: EzqlPromptOpts) {
   const [query, setQuery] = useState('')
-  
+
   const listRef = useRef<HTMLUListElement>(null)
 
-  const onSubmission = useCallback(async (phrase: string) => {
-    if (!token) throw new Error("Missing token")
-    if (didSubmitWithValue) didSubmitWithValue(phrase)
+  const onSubmission = useCallback(
+    async (phrase: string) => {
+      if (!token) throw new Error('Missing token')
+      if (didSubmitWithValue) didSubmitWithValue(phrase)
 
-    // TODO make request to Outerbase
-    const ezql = new EZQL({ token })
-    const result = await ezql.prompt(phrase, Prompt.sql)
-    console.dir(result)
-    // and pass the result to onResults()
-  }, [token])
+      const ezql = new EZQL({ token, host: 'app.dev.outerbase.com' })
+      const {
+        response: {
+          query: { text: sql },
+        },
+      } = await ezql.prompt(phrase, Prompt.sql)
+      
+      onResults(sql)
+    },
+    [token]
+  )
 
   return (
     <Modal didDismiss={() => setShouldDisplayEzql(false)} className={classNames('ezql-prompt-modal', className)}>

@@ -46,11 +46,10 @@ function App() {
           token={token}
           setShouldDisplayEzql={setShouldDisplayEzql}
           suggestions={suggestions}
-          didSubmitWithValue={(value) => {
-            console.log(`query: ${value}`)
+          didSubmitWithValue={(_value) => {
             setShouldDisplayEzql(false)
           }}
-          onResults={(json) => console.dir(json)}
+          onResults={(sql) => console.log(sql)}
           className="optional-for-styling-convenience"
         />
       )}

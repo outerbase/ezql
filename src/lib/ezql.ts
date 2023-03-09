@@ -3,6 +3,15 @@ export type EZQLOpts = {
   host?: string
 }
 
+type EZQLResponse = {
+  success: boolean
+  response: {
+    query: {
+      text: string
+    }
+  }
+}
+
 export enum Prompt {
   sql = 'sql',
   data = 'data',
@@ -42,7 +51,7 @@ export class EZQL {
     }
   }
 
-  async prompt(phrase: string, type: Prompt): Promise<string> {
+  async prompt(phrase: string, type: Prompt): Promise<EZQLResponse> {
     // console.debug(`prompt("${phrase}", ${type})`)
     if (!phrase || !type) throw new Error(`EZQL.prompt requires a 'phrase' and 'type' parameter`)
     if (!Object.values(Prompt).includes(type))
@@ -60,7 +69,7 @@ export class EZQL {
       }),
     })
 
-    if (result.status === 200) return result.text()
+    if (result.status === 200) return result.json()
     else {
       throw new Error(`${result.status}: ${result.statusText}`)
     }
