@@ -2,6 +2,7 @@ import { useCallback, useRef, useState } from 'react'
 import Modal from './modal'
 import { SuggestSearchListItem } from './suggest-search-list-item'
 import { classNames } from '../lib/class-names'
+import {EZQL, Prompt} from 'ezql'
 
 import styles from './ezql-prompt.module.css'
 
@@ -23,14 +24,19 @@ export default function EzqlPrompt({
   className,
 }: EzqlPromptOpts) {
   const [query, setQuery] = useState('')
+  
   const listRef = useRef<HTMLUListElement>(null)
 
-  const onSubmission = useCallback((value: string) => {
-    if (didSubmitWithValue) didSubmitWithValue(value)
+  const onSubmission = useCallback(async (phrase: string) => {
+    if (!token) throw new Error("Missing token")
+    if (didSubmitWithValue) didSubmitWithValue(phrase)
 
     // TODO make request to Outerbase
+    const ezql = new EZQL({ token })
+    const result = await ezql.prompt(phrase, Prompt.sql)
+    console.dir(result)
     // and pass the result to onResults()
-  }, [])
+  }, [token])
 
   return (
     <Modal didDismiss={() => setShouldDisplayEzql(false)} className={classNames('ezql-prompt-modal', className)}>
@@ -61,7 +67,7 @@ export default function EzqlPrompt({
           </span>
           <ul className={classNames(styles.suggestions_list, 'suggestions-list')} ref={listRef}>
             {suggestions?.map((text) => (
-              <SuggestSearchListItem key={text} text={text} didSubmitWithValue={didSubmitWithValue} />
+              <SuggestSearchListItem key={text} text={text} didSubmitWithValue={onSubmission} />
             ))}
           </ul>
         </div>
