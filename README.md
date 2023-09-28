@@ -73,7 +73,7 @@ Follow these steps to have a successful experience using EZQL:
 <br />
 
 ```sh
-npm add ezql
+npm install ezql
 ```
 
 ```sh
