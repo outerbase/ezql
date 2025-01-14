@@ -1,0 +1,61 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+:root {
+  --foreground-rgb: 0, 0, 0;
+  --background-rgb: 248, 249, 250;
+}
+
+body {
+  color: rgb(var(--foreground-rgb));
+  background: rgb(var(--background-rgb));
+  min-height: 100vh;
+  display: flex;
+  flex-direction: column;
+}
+
+/* Add smooth transitions */
+button, input, a {
+  @apply transition-all duration-200;
+}
+
+/* Add some global styles for better visual hierarchy */
+.input-blur {
+  @apply bg-white/80 backdrop-blur-sm;
+}
+
+.page-container {
+  @apply flex flex-col min-h-screen;
+}
+
+@layer utilities {
+  /* Transition utilities */
+  .transition-transform-opacity {
+    transition-property: transform, opacity;
+    transition-timing-function: cubic-bezier(0.4, 0, 0.2, 1);
+    transition-duration: 200ms;
+  }
+  
+  /* Interactive states */
+  .interactive-hover {
+    @apply hover:bg-gray-50 active:bg-gray-100;
+    @apply focus:outline-none focus:ring-2 focus:ring-gray-200;
+  }
+}
+
+/* Popover animations */
+@keyframes slideUpAndFade {
+  from {
+    opacity: 0;
+    transform: translateY(-4px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+.popover-enter {
+  animation: slideUpAndFade 200ms cubic-bezier(0.16, 1, 0.3, 1);
+} 
