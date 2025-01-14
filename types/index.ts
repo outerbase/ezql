@@ -3,18 +3,44 @@ import { Icons } from '../components/ui/icons'
 
 export type MessageType = 'user' | 'system'
 
+/**
+ * Unique identifier for a conversation branch
+ */
+export type BranchId = string
+
+/**
+ * Represents a single message in the conversation
+ */
 export interface Message {
   id: string
   content: string
   timestamp: Date
   type: MessageType
-  // Optional edited flag to track message edits
   edited?: boolean
+  branchId: BranchId
+  parentId?: string // ID of the message this branches from
+  order: number // Position in the conversation
 }
 
+/**
+ * Represents a branch in the conversation
+ */
+export interface Branch {
+  id: BranchId
+  parentMessageId?: string // Message this branch starts from
+  name: string // Auto-generated name for the branch
+  createdAt: Date
+  active: boolean // Whether this is the currently active branch
+  chatContext: ChatMessage[] // Chat context specific to this branch
+}
+
+/**
+ * Represents the entire conversation state
+ */
 export interface ChatState {
   messages: Message[]
-  chatMessages: ChatMessage[]
+  branches: Branch[]
+  activeBranchId: BranchId
   isLoading: boolean
   error: Error | null
   hasStarted: boolean
@@ -22,11 +48,12 @@ export interface ChatState {
 
 export type ConnectionType = 'database' | 'csv'
 
-// Message action handlers
+/**
+ * Message action handlers
+ */
 export interface MessageActions {
   onRegenerate?: (messageId: string) => Promise<void>
   onEdit?: (messageId: string, newContent: string) => Promise<void>
-  // Placeholder for future branch implementation
   onBranch?: (messageId: string) => Promise<void>
 }
 
