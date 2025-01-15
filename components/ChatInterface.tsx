@@ -13,7 +13,92 @@ import { useVirtualizer } from '@tanstack/react-virtual'
 import { useDebouncedCallback } from 'use-debounce'
 import BranchMinimap from './BranchMinimap'
 
+/**
+ * --------------------------------------------------------------------------
+ * Utility: gather the entire ancestry for a given branch,
+ * from the ROOT to the activeBranchId.
+ * 
+ * Example: if active branch is 3rd level:
+ *   [ mainBranch, secondBranch, activeBranch ]
+ */
+function getBranchAncestry(branches: Branch[], messages: Message[], activeBranchId: string): Branch[] {
+  const branchMap: Record<string, Branch> = {}
+  for (const b of branches) {
+    branchMap[b.id] = b
+  }
+
+  const result: Branch[] = []
+  let current = branchMap[activeBranchId]
+  while (current) {
+    // Insert at start => final array = [ root-most, ..., activeBranch ]
+    result.unshift(current)
+
+    // if no parentMessageId, we've reached a root
+    if (!current.parentMessageId) {
+      break
+    }
+    // find parent's branch
+    const parentMsg = messages.find((m) => m.id === current.parentMessageId)
+    if (!parentMsg) {
+      break
+    }
+    const parentBranch = branchMap[parentMsg.branchId]
+    if (!parentBranch) {
+      break
+    }
+    current = parentBranch
+  }
+  return result
+}
+
+/**
+ * --------------------------------------------------------------------------
+ * Utility: get all visible messages from the entire chain of ancestors
+ * plus the active branch. For each ancestor branch, we only show messages
+ * up to the branch point that leads to the next child.
+ */
+function getVisibleMessages(branches: Branch[], messages: Message[], activeBranchId: string): Message[] {
+  const ancestry = getBranchAncestry(branches, messages, activeBranchId)
+  let all: Message[] = []
+
+  for (let i = 0; i < ancestry.length; i++) {
+    const currentBranch = ancestry[i]
+    // sort messages for this branch
+    const branchMsgs = messages
+      .filter((m) => m.branchId === currentBranch.id)
+      .sort((a, b) => a.order - b.order)
+
+    // If not the last branch in the ancestry, only show up to the parent's branching message
+    if (i < ancestry.length - 1) {
+      const nextBranch = ancestry[i + 1]
+      const nextBranchParentMsgId = nextBranch.parentMessageId
+      if (nextBranchParentMsgId) {
+        // find that message in currentBranch
+        const parentMsg = branchMsgs.find((m) => m.id === nextBranchParentMsgId)
+        if (parentMsg) {
+          all = all.concat(branchMsgs.filter((m) => m.order <= parentMsg.order))
+          continue
+        }
+      }
+    }
+    // otherwise, if it's the last branch (the active branch),
+    // include all messages from that branch
+    all = all.concat(branchMsgs)
+  }
+
+  // deduplicate (some messages might appear in multiple branches if they share the same parentMessage)
+  const uniqueMap = new Map<string, Message>()
+  for (const msg of all) {
+    uniqueMap.set(msg.id, msg)
+  }
+  // re-sort by order
+  const deduped = Array.from(uniqueMap.values()).sort((a, b) => a.order - b.order)
+  return deduped
+}
+
+// --------------------------------------------------------------------------
 // Constants for better maintainability
+// --------------------------------------------------------------------------
 const SCROLL_PADDING = 200
 const MESSAGE_BASE_HEIGHT = 80
 const MESSAGE_LINE_HEIGHT = 20
@@ -49,10 +134,6 @@ const estimateMessageHeight = (content: string): number => {
 
 /**
  * Props for the connection option buttons in the chat interface
- * @property {("database" | "fileUpload")} icon - Icon to display
- * @property {string} label - Button label text
- * @property {() => void} onClick - Click handler
- * @property {ConnectionType} type - Type of connection
  */
 interface ConnectionOptionProps {
   icon: "database" | "fileUpload"
@@ -212,7 +293,6 @@ const Message: FC<MessageProps> = memo(function Message({ message, isHovered, ac
   const [isEditing, setIsEditing] = useState(false)
   const [editContent, setEditContent] = useState(message.content)
   const inputRef = useRef<HTMLTextAreaElement>(null)
-  const messageRef = useRef<HTMLDivElement>(null)
 
   // Focus management and keyboard navigation
   useEffect(() => {
@@ -220,7 +300,7 @@ const Message: FC<MessageProps> = memo(function Message({ message, isHovered, ac
       inputRef.current.focus()
       inputRef.current.setSelectionRange(editContent.length, editContent.length)
     }
-  }, [isEditing])
+  }, [isEditing, editContent])
 
   // Announce edits to screen readers
   useEffect(() => {
@@ -277,11 +357,10 @@ const Message: FC<MessageProps> = memo(function Message({ message, isHovered, ac
         </div>
       )}
       <div 
-        className={`relative flex max-w-[80%] px-4 py-2 rounded-2xl ${
-          isUser 
-            ? 'bg-blue-500 text-white rounded-tr-none ml-auto' 
-            : 'bg-gray-100 text-gray-900 rounded-tl-none'
-        }`}
+        className={`
+          relative flex max-w-[80%] px-4 py-2 rounded-2xl
+          ${isUser ? 'bg-blue-500 text-white rounded-tr-none ml-auto' : 'bg-gray-100 text-gray-900 rounded-tl-none'}
+        `}
       >
         {isEditing ? (
           <textarea
@@ -408,7 +487,6 @@ const VirtualMessageList = memo(function VirtualMessageList({
   // Handle scrolling when new messages arrive
   useEffect(() => {
     if (!messages.length) return
-    
     const lastMessage = messages[messages.length - 1]
     if (lastMessage.id !== lastMessageRef.current) {
       lastMessageRef.current = lastMessage.id
@@ -426,9 +504,7 @@ const VirtualMessageList = memo(function VirtualMessageList({
 
   return (
     <div ref={parentRef} className="relative w-full">
-      <div
-        style={{ height: `${virtualizer.getTotalSize()}px` }}
-      >
+      <div style={{ height: `${virtualizer.getTotalSize()}px` }}>
         {virtualizer.getVirtualItems().map((virtualItem) => {
           const message = messages[virtualItem.index]
           return (
@@ -478,13 +554,15 @@ const VirtualMessageList = memo(function VirtualMessageList({
 const ChatInterface: FC = () => {
   const [state, setState] = useState<ChatState>({
     messages: [],
-    branches: [{
-      id: 'main',
-      name: 'Main Conversation',
-      createdAt: new Date(),
-      active: true,
-      chatContext: []
-    }],
+    branches: [
+      {
+        id: 'main',
+        name: 'Main Conversation',
+        createdAt: new Date(),
+        active: true,
+        chatContext: []
+      }
+    ],
     activeBranchId: 'main',
     isLoading: false,
     error: null,
@@ -511,20 +589,19 @@ const ChatInterface: FC = () => {
         order: state.messages.length
       }
 
-      // Create chat message for context
+      // Chat message context
       const userMessage: ChatMessage = {
         role: 'user',
         content: message,
       }
 
-      // Update state with new user message
+      // Update local state with new user message
       setState(prev => {
         const newBranches = prev.branches.map(b => 
           b.id === prev.activeBranchId
             ? { ...b, chatContext: [...b.chatContext, userMessage] }
             : b
         )
-        
         return { 
           ...prev, 
           hasStarted: true,
@@ -533,17 +610,16 @@ const ChatInterface: FC = () => {
         }
       })
 
-      // Get the updated context and send the message
+      // Call the AI API
       const updatedBranch = state.branches.find(b => b.id === state.activeBranchId)
       if (!updatedBranch) return
 
       const response = await chatApi.sendMessage([...updatedBranch.chatContext, userMessage])
-
       if (response.error) {
         throw new Error(response.error)
       }
 
-      // Create the AI response message
+      // AI response message
       const aiMessage = {
         id: crypto.randomUUID(),
         content: response.message,
@@ -558,13 +634,13 @@ const ChatInterface: FC = () => {
         content: response.message
       }
 
+      // Update local state with AI message
       setState(prev => {
         const newBranches = prev.branches.map(b => 
           b.id === prev.activeBranchId
             ? { ...b, chatContext: [...b.chatContext, assistantMessage] }
             : b
         )
-
         return {
           ...prev,
           branches: newBranches,
@@ -580,101 +656,80 @@ const ChatInterface: FC = () => {
     }
   }, [message, state.branches, state.activeBranchId])
 
+  // Editing
   const handleEdit = useCallback(async (messageId: string, newContent: string) => {
     setState(prev => {
-      const messageIndex = prev.messages.findIndex(m => m.id === messageId)
-      if (messageIndex === -1) return prev
+      const msgIndex = prev.messages.findIndex(m => m.id === messageId)
+      if (msgIndex === -1) return prev
 
-      const message = prev.messages[messageIndex]
-      const branch = prev.branches.find(b => b.id === message.branchId)
+      const oldMsg = prev.messages[msgIndex]
+      const branch = prev.branches.find(b => b.id === oldMsg.branchId)
       if (!branch) return prev
 
       // Update the message
-      const newMessages = [...prev.messages]
-      newMessages[messageIndex] = {
-        ...newMessages[messageIndex],
-        content: newContent,
-        edited: true
+      const newMsgs = [...prev.messages]
+      newMsgs[msgIndex] = { 
+        ...oldMsg, 
+        content: newContent, 
+        edited: true 
       }
 
-      // Update the branch context
+      // Update branch context
       const newBranches = prev.branches.map(b => {
-        if (b.id !== message.branchId) return b
-        
+        if (b.id !== oldMsg.branchId) return b
+
         const newContext = [...b.chatContext]
-        // Find and update the corresponding message in the context
-        const contextIndex = newContext.findIndex((_, i) => i === messageIndex)
-        if (contextIndex !== -1) {
-          newContext[contextIndex] = {
-            role: message.type === 'user' ? 'user' : 'assistant',
+        // find in the context by comparing the index or content
+        const ctxIndex = newContext.findIndex(
+          (ctxItem, i) => i === msgIndex
+        )
+        if (ctxIndex !== -1) {
+          newContext[ctxIndex] = {
+            role: oldMsg.type === 'user' ? 'user' : 'assistant',
             content: newContent
           }
         }
-        
-        return {
-          ...b,
-          chatContext: newContext
-        }
+        return { ...b, chatContext: newContext }
       })
 
-      return {
-        ...prev,
-        messages: newMessages,
-        branches: newBranches
-      }
+      return { ...prev, messages: newMsgs, branches: newBranches }
     })
   }, [])
 
+  // Regenerate
   const handleRegenerate = useCallback(async (messageId: string) => {
     setState(prev => ({ ...prev, isLoading: true }))
     try {
-      const messageIndex = state.messages.findIndex(m => m.id === messageId)
-      if (messageIndex === -1) return
+      const idx = state.messages.findIndex(m => m.id === messageId)
+      if (idx === -1) return
 
-      const message = state.messages[messageIndex]
-      const branch = state.branches.find(b => b.id === message.branchId)
+      const msg = state.messages[idx]
+      const branch = state.branches.find(b => b.id === msg.branchId)
       if (!branch) return
 
-      // Get previous context up to this message
-      const previousContext = branch.chatContext.slice(0, messageIndex)
-      const response: ChatResponse = await chatApi.sendMessage(previousContext)
-
+      // previous context up to this message
+      const prevContext = branch.chatContext.slice(0, idx)
+      const response: ChatResponse = await chatApi.sendMessage(prevContext)
       if (response.error) {
         throw new Error(response.error)
       }
 
       setState(prev => {
-        // Update the message
-        const newMessages = [...prev.messages]
-        newMessages[messageIndex] = {
-          ...newMessages[messageIndex],
+        const newMsgs = [...prev.messages]
+        newMsgs[idx] = {
+          ...newMsgs[idx],
           content: response.message
         }
 
-        // Update the branch context
+        // Update context
         const newBranches = prev.branches.map(b => {
-          if (b.id !== message.branchId) return b
-          
-          const newContext = [...b.chatContext]
-          // Replace the AI response in the context
-          newContext[messageIndex] = {
-            role: 'assistant',
-            content: response.message
-          }
-          // Remove any subsequent messages as they're now invalid
-          newContext.length = messageIndex + 1
-          
-          return {
-            ...b,
-            chatContext: newContext
-          }
+          if (b.id !== msg.branchId) return b
+          const newCtx = [...b.chatContext]
+          newCtx[idx] = { role: 'assistant', content: response.message }
+          newCtx.length = idx + 1
+          return { ...b, chatContext: newCtx }
         })
-
-        return {
-          ...prev,
-          messages: newMessages,
-          branches: newBranches
-        }
+        return { ...prev, messages: newMsgs, branches: newBranches }
       })
     } catch (error) {
       setState(prev => ({ ...prev, error: error as Error }))
@@ -683,29 +738,47 @@ const ChatInterface: FC = () => {
     }
   }, [state.messages, state.branches])
 
+  // Branching
   const handleBranch = useCallback(async (messageId: string) => {
-    const sourceMessage = state.messages.find(m => m.id === messageId)
-    if (!sourceMessage) return
+    const sourceMsg = state.messages.find(m => m.id === messageId)
+    if (!sourceMsg) return
 
     // Create new branch
     const branchId = crypto.randomUUID()
-    const branchName = `Branch from "${sourceMessage.content.slice(0, 20)}..."`
-    
-    // Find the source branch and get its context up to this point
-    const sourceBranch = state.branches.find(b => b.id === sourceMessage.branchId)
+    const branchName = `Branch from "${sourceMsg.content.slice(0, 20)}..."`
+    const sourceBranch = state.branches.find(b => b.id === sourceMsg.branchId)
     if (!sourceBranch) return
 
-    // Get all messages up to and including the branch point that belong to the source branch
-    const relevantMessages = state.messages
-      .filter(m => m.branchId === sourceBranch.id && m.order <= sourceMessage.order)
+    // Gather relevant messages from the source branch & ancestors, up to this message
+    const relevant = state.messages
+      .filter((m) => {
+        // If it's from the same branch, include up to the branching message
+        if (m.branchId === sourceBranch.id) {
+          return m.order <= sourceMsg.order
+        }
+        // Also include ancestors
+        let curr = sourceBranch
+        while (curr.parentMessageId) {
+          const parentMsg = state.messages.find(mm => mm.id === curr.parentMessageId)
+          if (!parentMsg) break
+          const parentBr = state.branches.find(bb => bb.id === parentMsg.branchId)
+          if (!parentBr) break
+
+          // If the message is from that parent branch & before or at the parent's msg
+          if (m.branchId === parentBr.id && m.order <= parentMsg.order) {
+            return true
+          }
+          curr = parentBr
+        }
+        return false
+      })
       .sort((a, b) => a.order - b.order)
 
-    // Create chat context from relevant messages
-    const branchContext = relevantMessages.map(m => ({
+    const branchContext: ChatMessage[] = relevant.map(m => ({
       role: m.type === 'user' ? 'user' : 'assistant',
       content: m.content
-    } as ChatMessage))
-    
+    }))
+
     const newBranch: Branch = {
       id: branchId,
       parentMessageId: messageId,
@@ -722,6 +795,7 @@ const ChatInterface: FC = () => {
     }))
   }, [state.messages, state.branches])
 
+  // Switch branch
   const handleBranchSelect = useCallback((branchId: BranchId) => {
     setState(prev => ({
       ...prev,
@@ -733,36 +807,25 @@ const ChatInterface: FC = () => {
     }))
   }, [])
 
-  // Update messageActions
+  // Collect actions
   const messageActions: MessageActions = {
     onEdit: handleEdit,
     onRegenerate: handleRegenerate,
     onBranch: handleBranch
   }
 
-  // Filter messages to show only the active branch
+  // NEW: gather all visible messages from active branch + its ancestors
   const visibleMessages = useMemo(() => {
-    return state.messages.filter(m => {
-      // Show messages from the active branch
-      if (m.branchId === state.activeBranchId) return true
-      
-      // Show messages that lead to this branch
-      const activeBranch = state.branches.find(b => b.id === state.activeBranchId)
-      if (!activeBranch?.parentMessageId) return false
-      
-      const branchPoint = state.messages.find(msg => msg.id === activeBranch.parentMessageId)
-      if (!branchPoint) return false
-      
-      return m.order <= branchPoint.order
-    })
-  }, [state.messages, state.branches, state.activeBranchId])
+    return getVisibleMessages(state.branches, state.messages, state.activeBranchId)
+  }, [state.branches, state.messages, state.activeBranchId])
 
-  // Add keyboard shortcuts
+  // Keybinding
   useKeyboardShortcuts(
     () => handleSubmit(new Event('submit') as any),
     state.isLoading
   )
 
+  // Show error if present
   if (state.error) {
     return (
       <div role="alert" className="text-red-500">
@@ -770,7 +833,8 @@ const ChatInterface: FC = () => {
       </div>
     )
   }
-// IMPORTANT the state error message is not easily fixable, ignore it for now
+
+  // UI
   return (
     <main className="flex-1 flex flex-col">
       <div className="flex-1 flex flex-col mx-auto w-full">
@@ -839,12 +903,15 @@ const ChatInterface: FC = () => {
           </div>
         )}
       </div>
+
+      {/* If there's an error, show a floating alert (non-blocking) */}
       {state.error && (
         <div className="fixed top-4 right-4 bg-red-50 text-red-500 px-4 py-2 rounded-lg shadow-sm">
           {state.error}
         </div>
       )}
-      
+
+      {/* Show minimap once conversation starts */}
       {state.hasStarted && (
         <BranchMinimap
           messages={state.messages}
@@ -857,4 +924,4 @@ const ChatInterface: FC = () => {
   )
 }
 
-export default ChatInterface 
+export default ChatInterface
