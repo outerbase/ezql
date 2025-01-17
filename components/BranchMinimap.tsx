@@ -290,7 +290,7 @@ const BranchMinimap: FC<BranchMinimapProps> = memo(function BranchMinimap({
           overflow-hidden
           bg-white 
           border border-gray-200 
-          rounded-lg 
+          rounded-3xl
           shadow-lg
         "
       >
